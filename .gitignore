@@ -2,3 +2,6 @@ coco-data
 bbox.c
 *.so
 *.pyc
+/results
+*.pkl
+test*.py
