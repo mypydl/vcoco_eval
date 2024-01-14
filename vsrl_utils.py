@@ -38,9 +38,9 @@ def load_coco(dir_name=None):
 def load_vcoco(imset, dir_name=None):
   if dir_name is None:
     dir_name = get_data_dir()
-  with open(os.path.join(dir_name, 'vcoco', imset + '.json'), 'rt') as f:
+  with open(os.path.join(dir_name, 'vcoco', imset + '.json')) as f:
     vsrl_data = json.load(f)
-  vsrl_data = unicode_to_str(vsrl_data)
+  # vsrl_data = unicode_to_str(vsrl_data)
   for i in range(len(vsrl_data)):
     vsrl_data[i]['role_object_id'] = \
       np.array(vsrl_data[i]['role_object_id']).reshape((len(vsrl_data[i]['role_name']),-1)).T
@@ -60,8 +60,7 @@ def coco_ann_id_to_image_id(ann_id, coco):
 # Attach relevant boxes
 def all_relevant_objects(vsrl_data_all, coco):
   vsrl_relevant_objects = []
-  for i in xrange(len(vsrl_data_all)):
-      v_i = vsrl_data_all[i]
+  for i, v_i in enumerate(vsrl_data_all):
       bbox = []; image_id = [];
       num_roles = len(v_i['role_name'])
       for j in range(num_roles):
