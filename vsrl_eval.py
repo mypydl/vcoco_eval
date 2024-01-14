@@ -224,7 +224,23 @@ class VCOCOeval(object):
       gt_actions = data['gt_actions'][gt_inds]
       # some peorson instances don't have annotated actions
       # we ignore those instances
-      ignore = np.any(gt_actions == -1, axis=1)
+      # ignore = np.any(gt_actions == -1, axis=1)  # NOTE 未排除no-role-acts和point_instr
+      # 改，排除no-role-acts和point_instr >>>>>
+      ignore = []
+      for i, acts in enumerate(gt_actions):
+        if np.any(acts == -1):
+          ignore.append(True)
+        else:
+          for aid, roles in enumerate(self.roles):
+            if len(roles) < 2 or aid == 23:
+              acts[aid] = 0
+          if np.all(acts == 0):
+            ignore.append(True)
+            gt_actions[i] = -1
+          else:
+            ignore.append(False)
+      ignore = np.array(ignore)
+      # 改，排除no-role-acts和point_instr <<<<<
       assert np.all(gt_actions[ignore]==-1)
 
       for aid in range(self.num_actions):
