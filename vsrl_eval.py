@@ -235,7 +235,8 @@ class VCOCOeval(object):
       pred_agents, pred_roles = self.dets_per_img[image_id]
       # NOTE 这层循环的问题在于：若图片仅含no-role-action，也不会被忽略，其对应的pred全部会被视为负例（n*num_act个）。
       for aid in range(self.num_actions):
-        if len(self.roles[aid])<2:
+        # if len(self.roles[aid])<2:
+        if len(self.roles[aid])<2 or aid == 23:  # 改，排除point_instr
           # if action has no role, then no role AP computed
           continue
 
@@ -316,7 +317,8 @@ class VCOCOeval(object):
     role_ap = np.zeros((self.num_actions, 2), dtype=np.float32)
     role_ap[:] = np.nan
     for aid in range(self.num_actions):
-      if len(self.roles[aid])<2:
+      # if len(self.roles[aid])<2:
+      if len(self.roles[aid])<2 or aid == 23:  # 改，排除point_instr
         continue
       for rid in range(len(self.roles[aid])-1):
         a_fp = np.array(fp[aid][rid], dtype=np.float32)
